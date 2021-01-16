@@ -1,83 +1,83 @@
 {
-	"name": "mark-from-sublime-text",
-	"description": "Mark from Sublime Text",
-	"version": "0.0.1",
-	"publisher": "dreamfliper",
-	"license": "MIT",
-	"engines": {
-		"vscode": "^1.32.0"
-	},
-	"repository": {
-		"url": "https://github.com/Microsoft/vscode-extension-samples"
-	},
-	"categories": [
-		"Other"
-	],
-	"activationEvents": [
-		"*"
-	],
-	"main": "./out/extension.js",
-	"contributes": {
-		"commands": [
-			{
-				"command": "mark.swapWithMark",
-				"title": "Mark: Swap With Mark"
-			},
-			{
-				"command": "mark.setMark",
-				"title": "Mark: Set Mark"
-			},
-			{
-				"command": "mark.clearMark",
-				"title": "Mark: Clear Mark"
-			},
-			{
-				"command": "mark.forceUpdate",
-				"title": "Mark: Force Update"
-			}
-		],
-		"keybindings": [
-			{
-				"command": "mark.setMark",
-				"key": "ctrl+k ctrl+k",
-				"mac": "cmd+k cmd+k",
-				"when": "editorTextFocus"
-			},
-			{
-				"command": "mark.clearMark",
-				"key": "ctrl+k ctrl+g",
-				"mac": "cmd+k cmd+g",
-				"when": "editorTextFocus"
-			},
-			{
-				"command": "mark.swapWithMark",
-				"key": "ctrl+k ctrl+x",
-				"mac": "cmd+k cmd+x",
-				"when": "editorTextFocus"
-			}
-		],
-		"colors": [
-			{
-				"id": "myextension.largeNumberBackground",
-				"description": "Background decoration color for large numbers",
-				"defaults": {
-					"dark": "#FF000055",
-					"light": "#FF000055",
-					"highContrast": "#FF000055"
-				}
-			}
-		]
-	},
-	"scripts": {
-		"vscode:prepublish": "npm run compile",
-		"compile": "tsc -p ./",
-		"lint": "tslint -p ./",
-		"watch": "tsc -watch -p ./"
-	},
-	"devDependencies": {
-		"@types/node": "^8.9.1",
-		"@types/vscode": "^1.32.0",
-		"tslint": "^5.16.0",
-		"typescript": "^4.0.2"
-	}
+  "name": "mark-from-sublime-text",
+  "description": "Mark from Sublime Text",
+  "version": "0.1.1",
+  "publisher": "dreamfliper",
+  "license": "MIT",
+  "engines": {
+    "vscode": "^1.32.0"
+  },
+  "repository": {
+    "url": "https://github.com/Microsoft/vscode-extension-samples"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "*"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "mark.swapWithMark",
+        "title": "Mark: Swap With Mark"
+      },
+      {
+        "command": "mark.setMark",
+        "title": "Mark: Set Mark"
+      },
+      {
+        "command": "mark.clearMark",
+        "title": "Mark: Clear Mark"
+      },
+      {
+        "command": "mark.forceUpdate",
+        "title": "Mark: Force Update"
+      }
+    ],
+    "keybindings": [
+      {
+        "command": "mark.setMark",
+        "key": "ctrl+k ctrl+k",
+        "mac": "cmd+k cmd+k",
+        "when": "editorTextFocus"
+      },
+      {
+        "command": "mark.clearMark",
+        "key": "ctrl+k ctrl+g",
+        "mac": "cmd+k cmd+g",
+        "when": "editorTextFocus"
+      },
+      {
+        "command": "mark.swapWithMark",
+        "key": "ctrl+k ctrl+x",
+        "mac": "cmd+k cmd+x",
+        "when": "editorTextFocus"
+      }
+    ],
+    "colors": [
+      {
+        "id": "myextension.largeNumberBackground",
+        "description": "Background decoration color for large numbers",
+        "defaults": {
+          "dark": "#FF000055",
+          "light": "#FF000055",
+          "highContrast": "#FF000055"
+        }
+      }
+    ]
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "lint": "tslint -p ./",
+    "watch": "tsc -watch -p ./"
+  },
+  "devDependencies": {
+    "@types/node": "^8.9.1",
+    "@types/vscode": "^1.32.0",
+    "tslint": "^5.16.0",
+    "typescript": "^4.0.2"
+  }
 }
