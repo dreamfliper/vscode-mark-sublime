@@ -1,6 +1,7 @@
 {
   "name": "mark-from-sublime-text",
   "description": "Mark from Sublime Text",
+  "icon": "images/main-icon.png",
   "version": "0.1.1",
   "publisher": "dreamfliper",
   "license": "MIT",
