@@ -22,6 +22,10 @@ export class EnhancedRange extends vscode.Range {
     return this.start.isBefore(other.start);
   }
 
+  isAfter(other: Range) {
+    return this.start.isAfter(other.start);
+  }
+
   hasIntersection(other: Range) {
     return this.intersection(other) !== undefined;
   }
@@ -30,12 +34,17 @@ export class EnhancedRange extends vscode.Range {
     return this.hasIntersection(other) && this.isBefore(other);
   }
 
-  shrinkEnd(lines: number) {
-    return this.with({
-      end: this.end.with(this.end.line - lines),
-    });
+  isPartialAfter(other: Range) {
+    return this.hasIntersection(other) && this.isAfter(other);
   }
 
+  shrinkEnd(lines: number) {
+    return new EnhancedRange(
+      this.with({
+        end: this.end.with(this.end.line - lines),
+      })
+    );
+  }
   transLateLines(lines: number) {
     return new EnhancedRange({
       start: this.start.translate(lines),

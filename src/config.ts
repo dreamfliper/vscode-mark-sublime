@@ -11,7 +11,7 @@ class Configuration {
 		this._decorationType = vscode.window.createTextEditorDecorationType({
 			gutterIconPath: path + '/mark-gutter.svg',
 			gutterIconSize: 'auto',
-			rangeBehavior: vscode.DecorationRangeBehavior.ClosedOpen,
+			rangeBehavior: vscode.DecorationRangeBehavior.ClosedClosed,
 		});
 	}
 }

@@ -77,6 +77,11 @@ const calSelectionNewLocation = (
         .transLateLines(calTranslate(changedRange.shrinkEnd(1), change))
         .toSelection();
 
+    case changedRange.isPartialAfter(currentRange):
+      return currentRange
+        .shrinkEnd(deltaLines(changedRange.intersection(currentRange)!))
+        .toSelection();
+
     default:
       return currentMark;
   }
