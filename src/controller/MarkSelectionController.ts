@@ -63,18 +63,19 @@ const calSelectionNewLocation = (
 ) => {
   const changedRange = new EnhancedRange(change.range);
   const currentRange = new EnhancedRange(currentMark);
+
   switch (true) {
     case changedRange.contains(currentRange):
       return;
 
     case changedRange.isClearBefore(currentRange):
       return currentRange
-        .transLateLines(calTranslate(changedRange, change))
+        .translateLines(calTranslateLine(changedRange, change))
         .toSelection();
 
     case changedRange.isPartialBefore(currentRange):
       return currentRange
-        .transLateLines(calTranslate(changedRange.shrinkEnd(1), change))
+        .translateLines(calTranslateLine(changedRange.shrinkEnd(1), change))
         .toSelection();
 
     case changedRange.isPartialAfter(currentRange):
@@ -82,17 +83,35 @@ const calSelectionNewLocation = (
         .shrinkEnd(deltaLines(changedRange.intersection(currentRange)!))
         .toSelection();
 
+    case changedRange.isSingleLine &&
+      currentRange.isSingleLine &&
+      changedRange.isCharacterBefore(currentRange):
+      return currentRange
+        .translateCharacter(calTranslateCharacter(change))
+        .toSelection();
+
     default:
       return currentMark;
   }
 };
 
-const calTranslate = (
+const calTranslateLine = (
   range: Range,
   content: vscode.TextDocumentContentChangeEvent
 ) => appendLines(content) - deltaLines(range);
 
+const calTranslateCharacter = (
+  content: vscode.TextDocumentContentChangeEvent
+) => appendCharacters(content) - deltaCharacters(content);
+
 const deltaLines: RangeDelta = range => range.end.line - range.start.line;
+
+const appendCharacters = ({ text }: vscode.TextDocumentContentChangeEvent) =>
+  text.length;
+
+const deltaCharacters = ({
+  rangeLength,
+}: vscode.TextDocumentContentChangeEvent) => rangeLength;
 
 const appendLines = ({ text }: vscode.TextDocumentContentChangeEvent) =>
   text.split(/\n/).length - 1;

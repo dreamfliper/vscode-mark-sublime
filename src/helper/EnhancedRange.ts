@@ -11,7 +11,7 @@ export class EnhancedRange extends vscode.Range {
   }
 
   isClearBefore(other: Range) {
-    return this.end.isBefore(other.start);
+    return this.end.line < other.start.line;
   }
 
   isInRange(other: Range) {
@@ -24,6 +24,10 @@ export class EnhancedRange extends vscode.Range {
 
   isAfter(other: Range) {
     return this.start.isAfter(other.start);
+  }
+
+  isCharacterBefore(other: Range) {
+    return this.start.character < other.start.character;
   }
 
   hasIntersection(other: Range) {
@@ -45,10 +49,17 @@ export class EnhancedRange extends vscode.Range {
       })
     );
   }
-  transLateLines(lines: number) {
+  translateLines(lines: number) {
     return new EnhancedRange({
       start: this.start.translate(lines),
       end: this.end.translate(lines),
+    });
+  }
+
+  translateCharacter(characterDelta: number) {
+    return new EnhancedRange({
+      start: this.start.translate({ characterDelta }),
+      end: this.end.translate({ characterDelta }),
     });
   }
 }
