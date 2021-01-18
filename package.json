@@ -1,6 +1,6 @@
 {
   "name": "Sublime Mark",
-  "description": "The mark system which is ported from Sublime Text",
+  "description": "The marking system from Sublime Text",
   "icon": "images/main-icon.png",
   "version": "0.1.1",
   "publisher": "dreamfliper",
@@ -9,10 +9,16 @@
     "vscode": "^1.32.0"
   },
   "repository": {
-    "url": "https://github.com/Microsoft/vscode-extension-samples"
+    "url": "https://github.com/dreamfliper/vscode-mark-sublime"
   },
   "categories": [
     "Other"
+  ],
+  "tags": [
+    "mark",
+    "jump",
+    "navigation",
+    "bookmark"
   ],
   "activationEvents": [
     "*"
