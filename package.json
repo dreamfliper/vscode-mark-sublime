@@ -1,5 +1,6 @@
 {
-  "name": "Sublime Mark",
+  "name": "sublime-mark",
+  "displayName": "Sublime Mark",
   "description": "The marking system from Sublime Text",
   "icon": "images/main-icon.png",
   "version": "0.1.1",
