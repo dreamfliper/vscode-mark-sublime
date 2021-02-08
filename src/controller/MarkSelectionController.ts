@@ -1,10 +1,11 @@
-import * as vscode from "vscode";
-import configuration from "../config";
-import { MarkSelections } from "../store/MarkSelections";
-import type { isDefined, Range, RangeDelta } from "../types";
-import { EnhancedRange } from "../helper/EnhancedRange";
+import * as vscode from 'vscode';
+import configuration from '../config';
+import { MarkSelections } from '../store/MarkSelections';
+import type { isDefined, Range, RangeDelta } from '../types';
+import { EnhancedRange } from '../helper/EnhancedRange';
 
 export class MarkSelectionController {
+  // prettier-ignore
   constructor(
     private windowUri: vscode.Uri,
     private markSelections = new MarkSelections()
@@ -32,9 +33,7 @@ export class MarkSelectionController {
   }
 
   updateViewWithSelection(selections: vscode.Selection[]) {
-    vscode.window.activeTextEditor!.selections = this.markSelections.getStoreAndSet(
-      selections
-    );
+    vscode.window.activeTextEditor!.selections = this.markSelections.getStoreAndSet(selections);
     this.scrollSelectionToCenter();
     this.updateDecoration();
   }
@@ -69,9 +68,7 @@ const calSelectionNewLocation = (
       return;
 
     case changedRange.isClearBefore(currentRange):
-      return currentRange
-        .translateLines(calTranslateLine(changedRange, change))
-        .toSelection();
+      return currentRange.translateLines(calTranslateLine(changedRange, change)).toSelection();
 
     case changedRange.isPartialBefore(currentRange):
       return currentRange
@@ -86,32 +83,24 @@ const calSelectionNewLocation = (
     case changedRange.isSingleLine &&
       currentRange.isSingleLine &&
       changedRange.isCharacterBefore(currentRange):
-      return currentRange
-        .translateCharacter(calTranslateCharacter(change))
-        .toSelection();
+      return currentRange.translateCharacter(calTranslateCharacter(change)).toSelection();
 
     default:
       return currentMark;
   }
 };
 
-const calTranslateLine = (
-  range: Range,
-  content: vscode.TextDocumentContentChangeEvent
-) => appendLines(content) - deltaLines(range);
+const calTranslateLine = (range: Range, content: vscode.TextDocumentContentChangeEvent) =>
+  appendLines(content) - deltaLines(range);
 
-const calTranslateCharacter = (
-  content: vscode.TextDocumentContentChangeEvent
-) => appendCharacters(content) - deltaCharacters(content);
+const calTranslateCharacter = (content: vscode.TextDocumentContentChangeEvent) =>
+  appendCharacters(content) - deltaCharacters(content);
 
 const deltaLines: RangeDelta = range => range.end.line - range.start.line;
 
-const appendCharacters = ({ text }: vscode.TextDocumentContentChangeEvent) =>
-  text.length;
+const appendCharacters = ({ text }: vscode.TextDocumentContentChangeEvent) => text.length;
 
-const deltaCharacters = ({
-  rangeLength,
-}: vscode.TextDocumentContentChangeEvent) => rangeLength;
+const deltaCharacters = ({ rangeLength }: vscode.TextDocumentContentChangeEvent) => rangeLength;
 
 const appendLines = ({ text }: vscode.TextDocumentContentChangeEvent) =>
   text.split(/\n/).length - 1;

@@ -1,8 +1,8 @@
-import * as vscode from "vscode";
-import { Range } from "../types";
+import * as vscode from 'vscode';
+import { Range } from '../types';
 
 export class EnhancedRange extends vscode.Range {
-  constructor(arg: Pick<vscode.Range, "start" | "end">) {
+  constructor(arg: Pick<vscode.Range, 'start' | 'end'>) {
     super(arg.start, arg.end);
   }
 
