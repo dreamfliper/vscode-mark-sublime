@@ -65,7 +65,10 @@ const calSelectionNewLocation = (
 
   switch (true) {
     case changedRange.contains(currentRange):
-      return;
+      return new vscode.Selection(changedRange.start, changedRange.start);
+
+    case currentRange.contains(changedRange):
+      return new EnhancedRange(changedRange.union(currentMark)).toSelection();
 
     case changedRange.isClearBefore(currentRange):
       return currentRange.translateLines(calTranslateLine(changedRange, change)).toSelection();
