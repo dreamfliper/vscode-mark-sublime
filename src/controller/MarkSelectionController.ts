@@ -38,6 +38,21 @@ export class MarkSelectionController {
     this.updateDecoration();
   }
 
+  selectToMark(selection: vscode.Selection) {
+    const unionRange = this.markSelections.store
+      // .filter(mark=> new EnhancedRange(mark).isBefore(selection))
+      .reduce(
+        (acc, selection) => acc.union(selection),
+        new vscode.Range(selection.active, selection.active)
+      );
+    vscode.window.activeTextEditor!.selection = new vscode.Selection(
+      selection.active,
+      unionRange.end
+    );
+    new EnhancedRange(selection).isAfter(this.markSelections.store[0]); // unionRange.start
+    new EnhancedRange(selection).isBefore(this.markSelections.store[0]); // unionRange.end
+  }
+
   registerStickMark() {
     vscode.workspace.onDidChangeTextDocument(event => {
       if (!vscode.window.activeTextEditor) return;
