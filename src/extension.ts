@@ -8,6 +8,7 @@ export function activate(context: vscode.ExtensionContext) {
   configuration.iconPath = context.asAbsolutePath('images');
   vscode.commands.registerCommand('mark.swapWithMark', guardWithNullTab(swapWithMark));
   vscode.commands.registerCommand('mark.setMark', guardWithNullTab(setMark));
+  vscode.commands.registerCommand('mark.selectToMark', guardWithNullTab(selectToMark));
   vscode.commands.registerCommand('mark.clearMark', guardWithNullTab(clearMark));
   vscode.commands.registerCommand('mark.forceUpdate', guardWithNullTab(forceUpdate));
 }
@@ -25,6 +26,9 @@ const swapWithMark = ({ document, selections }: TextEditor) =>
 
 const setMark = ({ document, selections }: TextEditor) =>
   tabToMarkController.getMarkController(document.uri).setMarks(selections);
+
+const selectToMark = ({ document, selection }: TextEditor) =>
+  tabToMarkController.getMarkController(document.uri).selectToMark(selection);
 
 const clearMark = ({ document }: TextEditor) =>
   tabToMarkController.getMarkController(document.uri).setMarks([]);
