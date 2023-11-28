@@ -10,7 +10,7 @@ export class MarkSelectionController {
     private windowUri: vscode.Uri,
     private markSelections = new MarkSelections()
   ) {
-    this.registerStickMark();
+    this.registerStickyMark();
   }
 
   updateDecoration() {
@@ -27,18 +27,18 @@ export class MarkSelectionController {
     );
   }
 
-  setMarks(selections: vscode.Selection[]) {
+  setMarks(selections: readonly vscode.Selection[]) {
     this.markSelections.getStoreAndSet(selections);
     this.updateDecoration();
   }
 
-  updateViewWithSelection(selections: vscode.Selection[]) {
+  updateViewWithSelection(selections: readonly vscode.Selection[]) {
     vscode.window.activeTextEditor!.selections = this.markSelections.getStoreAndSet(selections);
     this.scrollSelectionToCenter();
     this.updateDecoration();
   }
 
-  registerStickMark() {
+  registerStickyMark() {
     vscode.workspace.onDidChangeTextDocument(event => {
       if (!vscode.window.activeTextEditor) return;
       if (event.document.uri !== this.windowUri) return;
@@ -47,7 +47,7 @@ export class MarkSelectionController {
         this.markSelections.getStoreAndSet(
           this.markSelections.store
             .map(mark => calSelectionNewLocation(change, mark))
-            .filter((Boolean as unknown) as isDefined)
+            .filter(Boolean as unknown as isDefined)
         );
       });
 
@@ -60,32 +60,30 @@ const calSelectionNewLocation = (
   change: vscode.TextDocumentContentChangeEvent,
   currentMark: vscode.Selection
 ) => {
-  const changedRange = new EnhancedRange(change.range);
+  const newRange = new EnhancedRange(change.range);
   const currentRange = new EnhancedRange(currentMark);
 
   switch (true) {
-    case changedRange.contains(currentRange):
-      return new vscode.Selection(changedRange.start, changedRange.start);
+    case newRange.contains(currentRange):
+      return new vscode.Selection(newRange.start, newRange.start);
 
-    case currentRange.contains(changedRange):
-      return new EnhancedRange(changedRange.union(currentMark)).toSelection();
+    case currentRange.contains(newRange):
+      return new EnhancedRange(newRange.union(currentMark)).toSelection();
 
-    case changedRange.isClearBefore(currentRange):
-      return currentRange.translateLines(calTranslateLine(changedRange, change)).toSelection();
+    case newRange.isClearBefore(currentRange):
+      return currentRange.translateLines(calTranslateLine(newRange, change)).toSelection();
 
-    case changedRange.isPartialBefore(currentRange):
+    case newRange.isPartialBefore(currentRange):
       return currentRange
-        .translateLines(calTranslateLine(changedRange.shrinkEnd(1), change))
+        .translateLines(calTranslateLine(newRange.shrinkEnd(1), change))
         .toSelection();
 
-    case changedRange.isPartialAfter(currentRange):
-      return currentRange
-        .shrinkEnd(deltaLines(changedRange.intersection(currentRange)!))
-        .toSelection();
+    case newRange.isPartialAfter(currentRange):
+      return currentRange.shrinkEnd(deltaLines(newRange.intersection(currentRange)!)).toSelection();
 
-    case changedRange.isSingleLine &&
+    case newRange.isSingleLine &&
       currentRange.isSingleLine &&
-      changedRange.isCharacterBefore(currentRange):
+      newRange.isCharacterBefore(currentRange):
       return currentRange.translateCharacter(calTranslateCharacter(change)).toSelection();
 
     default:
