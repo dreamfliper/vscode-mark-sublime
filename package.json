@@ -7,7 +7,7 @@
   "publisher": "dreamfliper",
   "license": "MIT",
   "engines": {
-    "vscode": "^1.32.0"
+    "vscode": "^1.84.2"
   },
   "repository": {
     "url": "https://github.com/dreamfliper/vscode-mark-sublime"
