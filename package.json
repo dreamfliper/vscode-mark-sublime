@@ -36,6 +36,10 @@
         "title": "Mark: Set Mark"
       },
       {
+        "command": "mark.selectToMark",
+        "title": "Mark: Select To Mark"
+      },
+      {
         "command": "mark.clearMark",
         "title": "Mark: Clear Mark"
       },

@@ -10,6 +10,7 @@ export function activate(context: vscode.ExtensionContext) {
   vscode.commands.registerCommand('mark.setMark', guardWithNullTab(setMark));
   vscode.commands.registerCommand('mark.clearMark', guardWithNullTab(clearMark));
   vscode.commands.registerCommand('mark.forceUpdate', guardWithNullTab(forceUpdate));
+  vscode.commands.registerCommand('mark.selectToMark', guardWithNullTab(selectToMark));
 }
 
 const guardWithNullTab = (fn: any) => () => {
@@ -31,3 +32,6 @@ const clearMark = ({ document }: TextEditor) =>
 
 const forceUpdate = ({ document }: TextEditor) =>
   tabToMarkController.getMarkController(document.uri).updateDecoration();
+
+const selectToMark = ({ document, selections }: TextEditor) =>
+  tabToMarkController.getMarkController(document.uri).selectToMark(selections);

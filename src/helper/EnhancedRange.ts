@@ -49,6 +49,7 @@ export class EnhancedRange extends vscode.Range {
       })
     );
   }
+
   translateLines(lines: number) {
     return new EnhancedRange({
       start: this.start.translate(lines),

@@ -6,7 +6,12 @@ export class MarkSelections {
   get store() {
     return this.collection;
   }
-  getStoreAndSet(selections: readonly vscode.Selection[]) {
+
+  get lastSelection() {
+    return this.collection[this.collection.length - 1];
+  }
+
+  setSelection(selections: readonly vscode.Selection[]) {
     const oldSelection = this.collection;
     this.collection = selections;
     return oldSelection;
