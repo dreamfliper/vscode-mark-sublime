@@ -6,10 +6,6 @@ export class EnhancedRange extends vscode.Range {
     super(start, end);
   }
 
-  get lines() {
-    return this.end.line - this.start.line;
-  }
-
   toSelection() {
     return new vscode.Selection(this.start, this.end);
   }
