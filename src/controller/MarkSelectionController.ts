@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import configuration from '../config';
 import { MarkSelections } from '../store/MarkSelections';
-import type { isDefined, Range, RangeDelta } from '../types';
+import type { Range } from '../types';
 import { EnhancedRange } from '../helper/EnhancedRange';
 
 export class MarkSelectionController {
@@ -54,7 +54,7 @@ export class MarkSelectionController {
         this.markSelections.setSelection(
           this.markSelections.store
             .map(mark => calSelectionNewLocation(change, mark))
-            .filter(Boolean as unknown as isDefined)
+            .filter(Boolean)
         );
       });
 
@@ -67,50 +67,50 @@ const calSelectionNewLocation = (
   change: vscode.TextDocumentContentChangeEvent,
   currentMark: vscode.Selection
 ) => {
-  const changedRange = new EnhancedRange(change.range);
-  const currentRange = new EnhancedRange(currentMark);
+  const changeRange = new EnhancedRange(change.range);
+  const markRnage = new EnhancedRange(currentMark);
 
   switch (true) {
-    case changedRange.contains(currentRange):
-      return new vscode.Selection(changedRange.start, changedRange.start);
+    case changeRange.contains(markRnage):
+      return new vscode.Selection(
+        changeRange.start,
+        changeRange.start.translate(appendLines(change.text))
+      );
 
-    case currentRange.contains(changedRange):
-      return new EnhancedRange(changedRange.union(currentMark)).toSelection();
+    case markRnage.contains(changeRange):
+      return markRnage.resize(calDeltaLines(change)).toSelection();
 
-    case changedRange.isClearBefore(currentRange):
-      return currentRange.translateLines(calTranslateLine(changedRange, change)).toSelection();
+    case changeRange.isClearBefore(markRnage):
+      return markRnage.translateLines(calDeltaLines(change)).toSelection();
 
-    case changedRange.isPartialBefore(currentRange):
-      return currentRange
-        .translateLines(calTranslateLine(changedRange.shrinkEnd(1), change))
+    case changeRange.isPartialBefore(markRnage):
+      return markRnage
+        .resize(-rangeLines(changeRange.intersection(markRnage)!))
+        .translateLines(calDeltaLines(change) + rangeLines(changeRange.intersection(markRnage)!))
         .toSelection();
 
-    case changedRange.isPartialAfter(currentRange):
-      return currentRange
-        .shrinkEnd(deltaLines(changedRange.intersection(currentRange)!))
-        .toSelection();
+    case changeRange.isPartialAfter(markRnage):
+      return markRnage.resize(-rangeLines(changeRange.intersection(markRnage)!)).toSelection();
 
-    case changedRange.isSingleLine &&
-      currentRange.isSingleLine &&
-      changedRange.isCharacterBefore(currentRange):
-      return currentRange.translateCharacter(calTranslateCharacter(change)).toSelection();
+    case changeRange.isSingleLine &&
+      markRnage.isSingleLine &&
+      changeRange.isCharacterBefore(markRnage):
+      return markRnage.translateCharacter(calTranslateCharacter(change)).toSelection();
 
     default:
       return currentMark;
   }
 };
 
-const calTranslateLine = (range: Range, content: vscode.TextDocumentContentChangeEvent) =>
-  appendLines(content) - deltaLines(range);
+const calDeltaLines = (change: vscode.TextDocumentContentChangeEvent) =>
+  appendLines(change.text) - removeLines(change.range);
 
-const calTranslateCharacter = (content: vscode.TextDocumentContentChangeEvent) =>
-  appendCharacters(content) - deltaCharacters(content);
-
-const deltaLines: RangeDelta = range => range.end.line - range.start.line;
+const calTranslateCharacter = (change: vscode.TextDocumentContentChangeEvent) =>
+  appendCharacters(change) - removeCharacters(change);
 
 const appendCharacters = ({ text }: vscode.TextDocumentContentChangeEvent) => text.length;
+const removeCharacters = ({ rangeLength }: vscode.TextDocumentContentChangeEvent) => rangeLength;
 
-const deltaCharacters = ({ rangeLength }: vscode.TextDocumentContentChangeEvent) => rangeLength;
-
-const appendLines = ({ text }: vscode.TextDocumentContentChangeEvent) =>
-  text.split(/\n/).length - 1;
+const removeLines = (range: Range) => range.end.line - range.start.line;
+const rangeLines = removeLines;
+const appendLines = (text: string) => text.match(new RegExp('\n', 'g'))?.length ?? 0;

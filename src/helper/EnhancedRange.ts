@@ -2,8 +2,8 @@ import * as vscode from 'vscode';
 import { Range } from '../types';
 
 export class EnhancedRange extends vscode.Range {
-  constructor(arg: Pick<vscode.Range, 'start' | 'end'>) {
-    super(arg.start, arg.end);
+  constructor({ start, end }: Pick<vscode.Range, 'start' | 'end'>) {
+    super(start, end);
   }
 
   toSelection() {
@@ -42,10 +42,10 @@ export class EnhancedRange extends vscode.Range {
     return this.hasIntersection(other) && this.isAfter(other);
   }
 
-  shrinkEnd(lines: number) {
+  resize(lines: number) {
     return new EnhancedRange(
       this.with({
-        end: this.end.with(this.end.line - lines),
+        end: this.end.with(this.end.line + lines),
       })
     );
   }
