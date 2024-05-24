@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import configuration from '../config';
 import { MarkSelections } from '../store/MarkSelections';
-import type { isDefined, Range, RangeDelta } from '../types';
+import type { Range, RangeDelta } from '../types';
 import { EnhancedRange } from '../helper/EnhancedRange';
 
 export class MarkSelectionController {
@@ -54,7 +54,7 @@ export class MarkSelectionController {
         this.markSelections.setSelection(
           this.markSelections.store
             .map(mark => calSelectionNewLocation(change, mark))
-            .filter(Boolean as unknown as isDefined)
+            .filter(Boolean)
         );
       });
 
@@ -67,32 +67,32 @@ const calSelectionNewLocation = (
   change: vscode.TextDocumentContentChangeEvent,
   currentMark: vscode.Selection
 ) => {
-  const changedRange = new EnhancedRange(change.range);
+  const rangeBeenChanged = new EnhancedRange(change.range);
   const currentRange = new EnhancedRange(currentMark);
 
   switch (true) {
-    case changedRange.contains(currentRange):
-      return new vscode.Selection(changedRange.start, changedRange.start);
+    case rangeBeenChanged.contains(currentRange):
+      return new vscode.Selection(rangeBeenChanged.start, rangeBeenChanged.start);
 
-    case currentRange.contains(changedRange):
-      return new EnhancedRange(changedRange.union(currentMark)).toSelection();
+    case currentRange.contains(rangeBeenChanged):
+      return new EnhancedRange(rangeBeenChanged.union(currentMark)).toSelection();
 
-    case changedRange.isClearBefore(currentRange):
-      return currentRange.translateLines(calTranslateLine(changedRange, change)).toSelection();
+    case rangeBeenChanged.isClearBefore(currentRange):
+      return currentRange.translateLines(calTranslateLine(rangeBeenChanged, change)).toSelection();
 
-    case changedRange.isPartialBefore(currentRange):
+    case rangeBeenChanged.isPartialBefore(currentRange):
       return currentRange
-        .translateLines(calTranslateLine(changedRange.shrinkEnd(1), change))
+        .translateLines(calTranslateLine(rangeBeenChanged.shrinkEnd(1), change))
         .toSelection();
 
-    case changedRange.isPartialAfter(currentRange):
+    case rangeBeenChanged.isPartialAfter(currentRange):
       return currentRange
-        .shrinkEnd(deltaLines(changedRange.intersection(currentRange)!))
+        .shrinkEnd(deltaLines(rangeBeenChanged.intersection(currentRange)!))
         .toSelection();
 
-    case changedRange.isSingleLine &&
+    case rangeBeenChanged.isSingleLine &&
       currentRange.isSingleLine &&
-      changedRange.isCharacterBefore(currentRange):
+      rangeBeenChanged.isCharacterBefore(currentRange):
       return currentRange.translateCharacter(calTranslateCharacter(change)).toSelection();
 
     default:

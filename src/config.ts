@@ -12,6 +12,7 @@ class Configuration {
       gutterIconPath: path + '/mark-gutter.svg',
       gutterIconSize: 'auto',
       rangeBehavior: vscode.DecorationRangeBehavior.ClosedClosed,
+      overviewRulerLane: vscode.OverviewRulerLane.Left,
     });
   }
 }
