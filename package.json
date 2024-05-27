@@ -46,6 +46,10 @@
       {
         "command": "mark.forceUpdate",
         "title": "Mark: Force Update"
+      },
+      {
+        "command": "mark.peekMark",
+        "title": "Mark: Peek Mark"
       }
     ],
     "keybindings": [

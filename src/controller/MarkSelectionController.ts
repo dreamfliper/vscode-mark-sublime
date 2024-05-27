@@ -10,16 +10,18 @@ export class MarkSelectionController {
     private windowUri: vscode.Uri,
     private markSelections = new MarkSelections()
   ) {
-    this.registerStickyMark();
+    this.#registerStickyMark();
   }
 
   updateDecoration() {
     vscode.window.activeTextEditor?.setDecorations(
       configuration.decorationType,
-      this.markSelections.store
+      this.markSelections.store.map((range, index) => ({
+        range,
+        hoverMessage: `mark: ${index + 1}`,
+      }))
     );
   }
-
   scrollSelectionToCenter() {
     vscode.window.activeTextEditor?.revealRange(
       vscode.window.activeTextEditor.selection,
@@ -39,13 +41,23 @@ export class MarkSelectionController {
     ).toSelection();
   }
 
+  peekMark() {
+    const { document } = vscode.window.activeTextEditor!;
+    vscode.commands.executeCommand(
+      'editor.action.peekLocations',
+      document.uri,
+      vscode.window.activeTextEditor?.selection.start,
+      this.markSelections.store.map(selection => new vscode.Location(document.uri!, selection))
+    );
+  }
+
   updateViewWithSelection(selections: readonly vscode.Selection[]) {
     vscode.window.activeTextEditor!.selections = this.markSelections.setSelection(selections);
     this.scrollSelectionToCenter();
     this.updateDecoration();
   }
 
-  registerStickyMark() {
+  #registerStickyMark() {
     vscode.workspace.onDidChangeTextDocument(event => {
       if (!vscode.window.activeTextEditor) return;
       if (event.document.uri !== this.windowUri) return;

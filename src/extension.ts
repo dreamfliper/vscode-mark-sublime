@@ -11,9 +11,10 @@ export function activate(context: vscode.ExtensionContext) {
   vscode.commands.registerCommand('mark.clearMark', guardWithNullTab(clearMark));
   vscode.commands.registerCommand('mark.forceUpdate', guardWithNullTab(forceUpdate));
   vscode.commands.registerCommand('mark.selectToMark', guardWithNullTab(selectToMark));
+  vscode.commands.registerCommand('mark.peekMark', guardWithNullTab(peekMark));
 }
 
-const guardWithNullTab = (fn: any) => () => {
+const guardWithNullTab = (fn: Function) => () => {
   const { activeTextEditor } = vscode.window;
   if (!activeTextEditor) return;
   fn(activeTextEditor);
@@ -35,3 +36,6 @@ const forceUpdate = ({ document }: TextEditor) =>
 
 const selectToMark = ({ document, selections }: TextEditor) =>
   tabToMarkController.getMarkController(document.uri).selectToMark(selections);
+
+const peekMark = ({ document }: TextEditor) =>
+  tabToMarkController.getMarkController(document.uri).peekMark();
