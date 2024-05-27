@@ -17,7 +17,7 @@ The marking system in Sublime Text is a light version compared to Vim’s, but w
 - [x] Swap to Mark
 - [x] Support for Multi-Cursor
 - [x] Select to Mark
-- ~~[ ] Delete to Mark~~ Please use `select then delete` instead
+- [ ] ~~Delete to Mark~~ Please use `select then delete` instead
 - [x] Peek Mark (new)
 
 ## Motivation
