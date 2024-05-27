@@ -3,7 +3,7 @@
   "displayName": "Sublime Mark",
   "description": "The marking system from Sublime Text",
   "icon": "images/main-icon.png",
-  "version": "0.3.1",
+  "version": "0.4.0",
   "publisher": "dreamfliper",
   "license": "MIT",
   "engines": {
